@@ -47,7 +47,7 @@ def extract_facturx_from_pdf(
         raise PDFParseError(_("Cannot read PDF file: {}").format(exc)) from exc
     try:
         # TODO: Support /Kids nodes
-        doc = pdf.trailer["/Root"]["/Names"]["/EmbeddedFiles"]["/Names"]  # type: ignore[index]
+        doc = pdf.trailer["/Root"]["/Names"]["/EmbeddedFiles"]["/Kids"][0]["/Names"]  # type: ignore[index]
         while doc:
             if doc[0] == FACTURX_FILENAME:
                 break

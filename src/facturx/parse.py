@@ -92,8 +92,8 @@ def _find_text(parent: ET.Element, tag: str) -> str:
 def _find_all_texts(parent: ET.Element, tag: str) -> list[str]:
     texts = []
     for el in parent.findall(tag):
-        if el.text is None:
-            raise InvalidXMLError(f"Element {tag} has no text")
+        # if el.text is None:
+            # raise InvalidXMLError(f"Element {tag} has no text")
         texts.append(el.text)
     return texts
 
@@ -107,8 +107,8 @@ def _find_text_optional(parent: ET.Element, tag: str) -> str | None:
     el = parent.find(tag)
     if el is None:
         return None
-    if el.text is None:
-        raise InvalidXMLError(f"Element {tag} has no text")
+#    if el.text is None:
+#        raise InvalidXMLError(f"Element {tag} has no text")
     return el.text
 
 
