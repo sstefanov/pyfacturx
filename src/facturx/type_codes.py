@@ -24,6 +24,7 @@ class IdentifierSchemeCode(StrEnum):
 
     GLN = "0088"  # Global Location Number, aka GS1/EAN location number
     GTIN = "0160"
+    LEITWEIGID = "0204"
 
 
 class DocumentTypeCode(IntEnum):

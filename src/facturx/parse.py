@@ -118,6 +118,8 @@ def _find_indicator(parent: ET.Element, tag: str) -> bool:
         raise InvalidXMLError(f"Element {tag} not found")
     indicator = el.find(f"./{{{NS_RAM}}}Indicator")
     if indicator is None:
+        indicator = el.find(f"./{{{NS_UDT}}}Indicator")
+    if indicator is None:
         raise InvalidXMLError("Indicator element not found")
     if indicator.text == "true":
         return True
@@ -146,8 +148,8 @@ def _find_id_optional(
 
 
 def _parse_id(el: ET.Element, *, scheme_required: bool) -> ID:
-    if el.text is None:
-        raise InvalidXMLError("ID element has no text")
+    # if el.text is None:
+        # raise InvalidXMLError("ID element has no text")
     scheme_id_s = el.attrib.get("schemeID")
     scheme_id: IdentifierSchemeCode | None = None
     if scheme_id_s is None and scheme_required:
@@ -331,20 +333,22 @@ def parse_xml(xml: str | _FileRead | StrPath) -> MinimumInvoice:
     )
     if id_el is None:
         raise NotFacturXError("Profile ID element not found")
-    if id_el.text == URN_MINIMUM_PROFILE:
+
+    txt = id_el.text.split("#")[0]
+    if txt == URN_MINIMUM_PROFILE:
         return _parse_minimum_invoice(tree)
-    elif id_el.text == URN_BASIC_WL_PROFILE:
+    elif txt == URN_BASIC_WL_PROFILE:
         return _parse_basic_wl_invoice(tree)
-    elif id_el.text == URN_BASIC_PROFILE:
+    elif txt == URN_BASIC_PROFILE:
         return _parse_basic_invoice(tree)
-    elif id_el.text == URN_EN16931_PROFILE:
+    elif txt == URN_EN16931_PROFILE:
         return _parse_en16931_invoice(tree)
-    elif id_el.text == URN_EXTENDED_PROFILE:
+    elif txt == URN_EXTENDED_PROFILE:
         raise UnsupportedProfileError("Unsupported profile: EXTENDED")
-    elif id_el.text == URN_XRECHNUNG_PROFILE:
+    elif txt == URN_XRECHNUNG_PROFILE:
         raise UnsupportedProfileError("Unsupported profile: XRECHNUNG")
     else:
-        raise UnsupportedProfileError(f"Unsupported profile: {id_el.text}")
+        raise UnsupportedProfileError(f"Unsupported profile: {txt}")
 
 
 def _parse_tree(xml: str | _FileRead | StrPath) -> ET.Element:
@@ -1677,8 +1681,8 @@ def _parse_email(parent: ET.Element) -> str | None:
         return None
     if id_el.attrib.get("schemeID") != "EM":
         raise InvalidXMLError("Invalid schemeID for email")
-    if id_el.text is None:
-        raise InvalidXMLError("URIID element has no text")
+    # if id_el.text is None:
+        # raise InvalidXMLError("URIID element has no text")
     return id_el.text
 
 
